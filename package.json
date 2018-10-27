@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/sclorg/nodejs-ex.git"
+    "url": "http://github.com/enterpriseyes/compare-api.git"
   },
-  "author": "Steve Speicher <sspeiche@gmail.com>",
+  "author": "Yes Enterprises <yes.enterprise18@gmail.com>",
   "license": "CC-BY-1.0",
   "bugs": {
-    "url": "http://github.com/sclorg/nodejs-ex/issues"
+    "url": "http://github.com/enterpriseyes/compare-api/issues"
   },
-  "homepage": "http://github.com/sclorg/nodejs-ex"
+  "homepage": "http://github.com/enterpriseyes/compare-api"
 }
