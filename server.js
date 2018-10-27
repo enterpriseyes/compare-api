@@ -43,7 +43,7 @@ app.get('/', function (req, res) {
     res.json({ message: 'Welcome to Yes Api' });
 });
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 8080));
 
 app.listen(app.get('port'), () => {
     console.log("Server is running at port " + app.get('port'));
