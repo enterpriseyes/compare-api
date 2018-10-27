@@ -1,8 +1,8 @@
 var express = require('express');
 
-// var productsRoutes = require('./routes/productsRoutes');
-// var ratesRoutes = require('./routes/ratesRoutes')
-// var activityRoutes = require('./routes/activityRoutes')
+var productsRoutes = require('./routes/productsRoutes');
+var ratesRoutes = require('./routes/ratesRoutes')
+var activityRoutes = require('./routes/activityRoutes')
 var bodyParser = require("body-parser");
 // Testing of OpenShift
 var cors = require('cors');
@@ -16,11 +16,11 @@ var corsOptions = {
     credentials: true,
     methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
     origin: function (origin, callback) {
-       if (whitelist.indexOf(origin) !== -1) {
+     //  if (whitelist.indexOf(origin) !== -1) {
             callback(null, true)
-        } else {
-            callback(new Error('Not allowed by CORS'))
-        }
+        // } else {
+        //     callback(new Error('Not allowed by CORS  ' + origin))
+        // }
     },
     preflightContinue: false
 }
@@ -28,26 +28,15 @@ var corsOptions = {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
-// app.use('/', productsRoutes);
-// app.use('/', ratesRoutes);
-// app.use('/', activityRoutes);
+app.use('/', productsRoutes);
+app.use('/', ratesRoutes);
+app.use('/', activityRoutes);
 
-
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
 
 // development error handler
 // will print stacktrace
 app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.json('error', {
-        message: err.message,
-        error: err
-    });
+    res.status(err.status >= 100 && err.status < 600 ? err.code : 500).send(err.message);
 });
 
 app.get('/', function (req, res) {
