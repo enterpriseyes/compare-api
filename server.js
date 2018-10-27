@@ -1,8 +1,8 @@
 var express = require('express');
 
-var productsRoutes = require('./routes/productsRoutes');
-var ratesRoutes = require('./routes/ratesRoutes')
-var activityRoutes = require('./routes/activityRoutes')
+// var productsRoutes = require('./routes/productsRoutes');
+// var ratesRoutes = require('./routes/ratesRoutes')
+// var activityRoutes = require('./routes/activityRoutes')
 var bodyParser = require("body-parser");
 // Testing of OpenShift
 var cors = require('cors');
@@ -28,9 +28,9 @@ var corsOptions = {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
-app.use('/', productsRoutes);
-app.use('/', ratesRoutes);
-app.use('/', activityRoutes);
+// app.use('/', productsRoutes);
+// app.use('/', ratesRoutes);
+// app.use('/', activityRoutes);
 
 
 // catch 404 and forward to error handler
