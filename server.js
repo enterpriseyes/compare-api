@@ -51,7 +51,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.get('/', function (req, res) {
-    res.json({ message: 'Welcome to Yes Api' });
+     res.render('index.html', { pageCountMessage : null});
 });
 
 app.set('port', (process.env.PORT || 5000));
