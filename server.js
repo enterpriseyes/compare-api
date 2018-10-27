@@ -1,125 +1,64 @@
-//  OpenShift sample Node application
-var express = require('express'),
-    app     = express(),
-    morgan  = require('morgan');
-    
-Object.assign=require('object-assign')
+var express = require('express');
 
-app.engine('html', require('ejs').renderFile);
-app.use(morgan('combined'))
-
-var port = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080,
-    ip   = process.env.IP   || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0',
-    mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL || process.env.MONGO_URL,
-    mongoURLLabel = "";
-
-if (mongoURL == null) {
-  var mongoHost, mongoPort, mongoDatabase, mongoPassword, mongoUser;
-  // If using plane old env vars via service discovery
-  if (process.env.DATABASE_SERVICE_NAME) {
-    var mongoServiceName = process.env.DATABASE_SERVICE_NAME.toUpperCase();
-    mongoHost = process.env[mongoServiceName + '_SERVICE_HOST'];
-    mongoPort = process.env[mongoServiceName + '_SERVICE_PORT'];
-    mongoDatabase = process.env[mongoServiceName + '_DATABASE'];
-    mongoPassword = process.env[mongoServiceName + '_PASSWORD'];
-    mongoUser = process.env[mongoServiceName + '_USER'];
-
-  // If using env vars from secret from service binding  
-  } else if (process.env.database_name) {
-    mongoDatabase = process.env.database_name;
-    mongoPassword = process.env.password;
-    mongoUser = process.env.username;
-    var mongoUriParts = process.env.uri && process.env.uri.split("//");
-    if (mongoUriParts.length == 2) {
-      mongoUriParts = mongoUriParts[1].split(":");
-      if (mongoUriParts && mongoUriParts.length == 2) {
-        mongoHost = mongoUriParts[0];
-        mongoPort = mongoUriParts[1];
-      }
-    }
-  }
-
-  if (mongoHost && mongoPort && mongoDatabase) {
-    mongoURLLabel = mongoURL = 'mongodb://';
-    if (mongoUser && mongoPassword) {
-      mongoURL += mongoUser + ':' + mongoPassword + '@';
-    }
-    // Provide UI label that excludes user id and pw
-    mongoURLLabel += mongoHost + ':' + mongoPort + '/' + mongoDatabase;
-    mongoURL += mongoHost + ':' +  mongoPort + '/' + mongoDatabase;
-  }
+var productsRoutes = require('./routes/productsRoutes');
+var ratesRoutes = require('./routes/ratesRoutes')
+var activityRoutes = require('./routes/activityRoutes')
+var bodyParser = require("body-parser");
+// Testing of OpenShift
+var cors = require('cors');
+var app = express();
+var whitelist = ['http://yesenterprise.co.in',
+ 'http://dev.yesenterprise.co.in', 
+ "http://localhost:4200",
+"http://localhost:5000"]
+var corsOptions = {
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "X-Access-Token"],
+    credentials: true,
+    methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
+    origin: function (origin, callback) {
+       if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    },
+    preflightContinue: false
 }
-var db = null,
-    dbDetails = new Object();
 
-var initDb = function(callback) {
-  if (mongoURL == null) return;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors(corsOptions));
+app.use('/', productsRoutes);
+app.use('/', ratesRoutes);
+app.use('/', activityRoutes);
 
-  var mongodb = require('mongodb');
-  if (mongodb == null) return;
 
-  mongodb.connect(mongoURL, function(err, conn) {
-    if (err) {
-      callback(err);
-      return;
-    }
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});
 
-    db = conn;
-    dbDetails.databaseName = db.databaseName;
-    dbDetails.url = mongoURLLabel;
-    dbDetails.type = 'MongoDB';
-
-    console.log('Connected to MongoDB at: %s', mongoURL);
-  });
-};
+// development error handler
+// will print stacktrace
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    res.json('error', {
+        message: err.message,
+        error: err
+    });
+});
 
 app.get('/', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    var col = db.collection('counts');
-    // Create a document with request IP and current time of request
-    col.insert({ip: req.ip, date: Date.now()});
-    col.count(function(err, count){
-      if (err) {
-        console.log('Error running count. Message:\n'+err);
-      }
-      res.render('index.html', { pageCountMessage : count, dbInfo: dbDetails });
-    });
-  } else {
-    res.render('index.html', { pageCountMessage : null});
-  }
+    res.json({ message: 'Welcome to Yes Api' });
 });
 
-app.get('/pagecount', function (req, res) {
-  // try to initialize the db on every request if it's not already
-  // initialized.
-  if (!db) {
-    initDb(function(err){});
-  }
-  if (db) {
-    db.collection('counts').count(function(err, count ){
-      res.send('{ pageCount: ' + count + '}');
-    });
-  } else {
-    res.send('{ pageCount: -1 }');
-  }
+app.set('port', (process.env.PORT || 5000));
+
+app.listen(app.get('port'), () => {
+    console.log("Server is running at port " + app.get('port'));
 });
 
-// error handling
-app.use(function(err, req, res, next){
-  console.error(err.stack);
-  res.status(500).send('Something bad happened!');
-});
-
-initDb(function(err){
-  console.log('Error connecting to Mongo. Message:\n'+err);
-});
-
-app.listen(port, ip);
-console.log('Server running on http://%s:%s', ip, port);
-
-module.exports = app ;
+// allow other dependencies to use it
+module.exports = app;
