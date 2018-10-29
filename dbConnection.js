@@ -1,11 +1,13 @@
-const mysql= require('mysql');
+const mysql = require('mysql');
 // DB connection configurations test
-const connection=mysql.createConnection({
-    host:'yesenterprise.co.in',
-    user:'yesenx84_dev_usr',
-    password:'Dev@2018',
-    database:'yesenx84_cloud_comparison'
-});
+const connection  = mysql.createPool({
+    connectionLimit : 10,
+    host: 'yesenterprise.co.in',
+    user: 'yesenx84_dev_usr',
+    password: 'Dev@2018',
+    database: 'yesenx84_cloud_comparison'
+  });
+//const connection = mysql.createConnection(mysql_pool);
 
 // DB connection configurations local 
 // const connection=mysql.createConnection({
@@ -14,5 +16,5 @@ const connection=mysql.createConnection({
 //     password:'Test@123',
 //     database:'cloud_comparision'
 // });
-connection.connect();
+//connection.connect();
 module.exports = connection;
