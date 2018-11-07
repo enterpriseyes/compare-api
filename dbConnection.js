@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 // DB connection configurations test
 const connection  = mysql.createPool({
-    connectionLimit : 10,
+    connectionLimit : 100,
     host: 'yesenterprise.co.in',
     user: 'yesenx84_dev_usr',
     password: 'Dev@2018',

@@ -4,7 +4,7 @@ var Products = {
         db.query('CALL getProductsInitial();',callback);
     },
     getProductBySku:(Sku,callback)=>{
-        db.query('SELECT * FROM products WHERE SKU=?',[Sku],callback);
+        db.query('CALL getProductDetails(\''+Sku+'\');',callback);
     },
     getProductDetailsByIds:(listOfIDs,callback)=>{
         db.query('CALL getProductDetailsByIds('+listOfIDs+');',callback);
