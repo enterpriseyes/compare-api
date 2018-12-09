@@ -6,8 +6,8 @@ var Products = {
     getProductBySku:(Sku,callback)=>{
         db.query('CALL getProductDetails(\''+Sku+'\');',callback);
     },
-    getProductDetailsByIds:(listOfIDs,callback)=>{
-        db.query('CALL getProductDetailsByIds('+listOfIDs+');',callback);
+    getProductDetailsByIds:(listOfIDs,contLen, callback)=>{
+        db.query('CALL getProductDetailsByIds('+listOfIDs+','+contLen+');',callback);
     },
     getProductLocations:(callback)=>{
         db.query('SELECT DISTINCT  LOCATION FROM products ORDER BY 1',callback);

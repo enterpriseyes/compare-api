@@ -58,7 +58,7 @@ productRouter.get('/getFilterredProducts/', (req, res, next) => {
 productRouter.get('/getProductDetailsByIds/', (req, res, next) => {
     if (req.params) {
         Product.getProductDetailsByIds(
-            req.query['listOfIDs'],
+            req.query['listOfIDs'], req.query['selcContractLength'],
             (err, rows) => {
             if (err)
                 res.json(err);
