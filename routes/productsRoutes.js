@@ -44,7 +44,28 @@ productRouter.get('/getFilterredProducts/', (req, res, next) => {
             req.query['strgSize'],
             req.query['opsSys'],
             req.query['contLen'], 
-            req.query['location'], (err, rows) => {
+            req.query['location'],
+            req.query['pageSize'],
+            req.query['pageNo'], (err, rows) => {
+            if (err)
+                res.json(err);
+            else
+                res.json(rows);
+        });
+    }
+    });
+
+    // GET list of all filtered products
+productRouter.get('/getAllFilterredProducts/', (req, res, next) => {
+    if (req.params) {
+        Product.getAllFilterredProducts(
+            req.query['noOfCPUS'],
+            req.query['mrySize'],
+            req.query['strgSize'],
+            req.query['opsSys'],
+            req.query['contLen'], 
+            req.query['location'],
+            (err, rows) => {
             if (err)
                 res.json(err);
             else

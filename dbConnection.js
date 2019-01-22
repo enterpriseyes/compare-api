@@ -1,11 +1,11 @@
 const mysql = require('mysql');
 // DB connection configurations test
 const connection  = mysql.createPool({
-    connectionLimit : 100,
-    host: 'yesenterprise.co.in',
-    user: 'yesenx84_dev_usr',
-    password: 'Dev@2018',
-    database: 'yesenx84_cloud_compare_dev'
+  connectionLimit : 100,
+  host: 'yesenterprise.co.in',
+  user: 'yesenx84_dev_usr',
+  password: 'Dev@2018',
+  database: 'yesenx84_dev_cloud_compare'
   });
 
 //DB connection configurations local 

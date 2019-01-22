@@ -12,8 +12,11 @@ var Products = {
     getProductLocations:(callback)=>{
         db.query('SELECT DISTINCT  LOCATION FROM products ORDER BY 1',callback);
     },
-    getFilterredProducts:(noOfCPUS,memorySize,storageSize,operatingSystem,contLen, location, callback)=>{
-        db.query('CALL getFilterredProducts(\''+noOfCPUS+'\',\''+memorySize+'\',\''+storageSize+'\',\''+operatingSystem+'\',\''+contLen+'\',\''+location+'\');',callback);
+    getFilterredProducts:(noOfCPUS,memorySize,storageSize,operatingSystem,contLen, location,pageSize,pageNo, callback)=>{
+        db.query('CALL getFilterredProducts(\''+noOfCPUS+'\',\''+memorySize+'\',\''+storageSize+'\',\''+operatingSystem+'\',\''+contLen+'\',\''+location+'\',\''+pageSize+'\',\''+pageNo+'\');',callback);
+    },
+    getAllFilterredProducts:(noOfCPUS,memorySize,storageSize,operatingSystem,contLen, location, callback)=>{
+        db.query('CALL getAllFilterredProducts(\''+noOfCPUS+'\',\''+memorySize+'\',\''+storageSize+'\',\''+operatingSystem+'\',\''+contLen+'\',\''+location+'\');',callback);
     }
   }
   module.exports=Products;
